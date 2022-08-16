@@ -18,35 +18,55 @@ public class MoviesController : ControllerBase
     [HttpGet]
     public ActionResult<IEnumerable<MoviePreview>> GetAll()
     {
-        IEnumerable<MoviePreview> movieViews = _moviesService.GetAll();
-        return Ok(movieViews);
+        IEnumerable<MoviePreview> moviePreviews = _moviesService.GetAll();
+        return Ok(moviePreviews);
     }
 
     [HttpGet("{movieId}")]
     public ActionResult<MovieView> Get(int movieId)
     {
-        MovieView movieView = _moviesService.Get(movieId);
+        MovieView movieView = _moviesService.GetById(movieId);
         return Ok(movieView);
     }
 
     [HttpPost]
-    public ActionResult<MovieView> Post(MovieCreate movieCreate)
+    public ActionResult<MoviePreview> Post(MovieCreate movieCreate)
     {
-        MovieView movieView = _moviesService.Create(movieCreate);
-        return Ok(movieView);
+        MoviePreview moviePreview = _moviesService.Create(movieCreate);
+        return Ok(moviePreview);
     }
 
     [HttpPut]
-    public ActionResult<MovieView> Put(MovieUpdate movieUpdate)
+    public ActionResult<MoviePreview> Put(MovieUpdate movieUpdate)
     {
-        MovieView movieView = _moviesService.Update(movieUpdate);
-        return Ok(movieView);
+        MoviePreview moviePreview = _moviesService.Update(movieUpdate);
+        return Ok(moviePreview);
     }
 
     [HttpDelete("{movieId}")]
-    public ActionResult<MovieView> Delete(int movieId)
+    public ActionResult<MoviePreview> Delete(int movieId)
     {
-        MovieView movieView = _moviesService.Delete(movieId);
-        return Ok(movieView);
+        MoviePreview moviePreview = _moviesService.Delete(movieId);
+        return Ok(moviePreview);
     }
+
+    #region Genres
+
+    [Route("{movieId}/genres/{genreId}/add")]
+    [HttpPost]
+    public ActionResult<MoviePreview> AddGenre(int movieId, int genreId)
+    {
+        MoviePreview moviePreview = _moviesService.AddGenre(movieId, genreId);
+        return Ok(moviePreview);
+    }
+    
+    [Route("{movieId}/genres/{genreId}/delete")]
+    [HttpDelete]
+    public ActionResult<MoviePreview> DeleteGenre(int movieId, int genreId)
+    {
+        MoviePreview moviePreview = _moviesService.DeleteGenre(movieId, genreId);
+        return Ok(moviePreview);
+    }
+
+    #endregion
 }
