@@ -23,18 +23,13 @@ public class ErrorHandlerMiddleware
         {
             HttpResponse response = context.Response;
             response.ContentType = "application/json";
-                
-            switch (error)
+
+            response.StatusCode = error switch
             {
-
-                case NotFoundException:
-                    response.StatusCode = (int) HttpStatusCode.NotFound;
-                    break;
-
-                default:
-                    response.StatusCode = (int) HttpStatusCode.InternalServerError;
-                    break;
-            }
+                NotFoundException => (int) HttpStatusCode.NotFound,
+                BadRequestException => (int) HttpStatusCode.BadRequest,
+                _ => (int) HttpStatusCode.InternalServerError
+            };
 
             string result = JsonConvert.SerializeObject(new {message = error.Message});
             await response.WriteAsync(result);

@@ -17,13 +17,13 @@ public class MoviesRepository : IMoviesRepository
 
     public IEnumerable<Movie> GetAll()
     {
-        using IDbConnection connection = new SqlConnection(_connectionKey);
+        using var connection = new SqlConnection(_connectionKey);
         return connection.Query<Movie>("select * from Movies");
     }
 
     public Movie GetById(int id)
     {
-        using IDbConnection connection = new SqlConnection(_connectionKey);
+        using var connection = new SqlConnection(_connectionKey);
 
         var sqlQuery = "select * from Movies where Id = @id";
         var movie = connection.QuerySingleOrDefault<Movie>(sqlQuery, new {id}) ??
@@ -33,26 +33,28 @@ public class MoviesRepository : IMoviesRepository
 
     public void Add(Movie item)
     {
-        using IDbConnection connection = new SqlConnection(_connectionKey);
-        var sqlString = "insert into Movies values (@Name, @ReleaseDate, @Budget, @Time) select @@IDENTITY";
+        using var connection = new SqlConnection(_connectionKey);
+        var sqlString =
+            "insert into Movies values (@Name, @Description, @ReleaseDate, @Budget, @Duration) select @@IDENTITY";
         item.Id = connection.QuerySingle<int>(sqlString, item);
     }
 
     public void Update(Movie item)
     {
-        using IDbConnection connection = new SqlConnection(_connectionKey);
+        using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = @"update Movies set 
                   Name = @Name,  
+                  Description = @Description,
                   ReleaseDate = @ReleaseDate, 
                   Budget = @Budget,
-                  Time = @Time 
+                  Duration = @Duration 
                   where Id = @Id";
         connection.Query(sqlQuery, item);
     }
 
     public void Delete(int id)
     {
-        using IDbConnection connection = new SqlConnection(_connectionKey);
+        using var connection = new SqlConnection(_connectionKey);
         connection.Query("delete from Movies where Id = @id", new {id});
     }
 }

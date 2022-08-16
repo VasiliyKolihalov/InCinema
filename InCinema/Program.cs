@@ -14,7 +14,9 @@ builder.Services.AddTransient<IApplicationContext>(_ => new ApplicationContext(c
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddTransient<MoviesService>();
+builder.Services
+    .AddTransient<MoviesService>()
+    .AddTransient<GenresService>();
 
 #endregion
 
