@@ -41,13 +41,13 @@ public class GenresRepository : IGenresRepository
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = "update Genres set Name = @Name, Description = @Description where Id = @Id";
-        connection.Query(sqlQuery, item);
+        connection.Execute(sqlQuery, item);
     }
 
     public void Delete(int id)
     {
         using var connection = new SqlConnection(_connectionKey);
-        connection.Query("delete from Genres where Id = @id", new {id});
+        connection.Execute("delete from Genres where Id = @id", new {id});
     }
 
     public Genre? GetByName(string genreName)
@@ -62,7 +62,7 @@ public class GenresRepository : IGenresRepository
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = @"select * from Genres
                         inner join MoviesGenres on Genres.Id = MoviesGenres.GenreId 
-                        and MoviesGenres.MovieId = @movieId";
+                        where MoviesGenres.MovieId = @movieId";
 
         return connection.Query<Genre>(sqlQuery, new {movieId});
     }
@@ -70,13 +70,13 @@ public class GenresRepository : IGenresRepository
     public void AddToMovie(int genreId, int movieId)
     {
         using var connection = new SqlConnection(_connectionKey);
-        connection.Query("insert into MoviesGenres values(@movieId, @genreId)", new {genreId, movieId});
+        connection.Execute("insert into MoviesGenres values(@movieId, @genreId)", new {genreId, movieId});
     }
 
     public void DeleteFromMovies(int genreId, int movieId)
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = "delete from MoviesGenres where MovieId = @movieId and GenreId = @genreId";
-        connection.Query(sqlQuery, new {movieId, genreId});
+        connection.Execute(sqlQuery, new {movieId, genreId});
     }
 }

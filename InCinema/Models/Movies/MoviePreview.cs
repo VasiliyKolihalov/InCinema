@@ -1,4 +1,6 @@
-﻿namespace InCinema.Models.Movies;
+﻿using InCinema.Models.Countries;
+
+namespace InCinema.Models.Movies;
 
 public class MoviePreview
 {
@@ -8,4 +10,5 @@ public class MoviePreview
     public DateTime ReleaseDate { get; set; }
     public decimal Budget { get; set; }
     public TimeSpan Duration { get; set; }
+    public CountryView Country { get; set; }
 }

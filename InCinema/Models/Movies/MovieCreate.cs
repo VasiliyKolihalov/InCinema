@@ -10,4 +10,6 @@ public class MovieCreate
     [Required] public DateTime ReleaseDate { get; set; }
     [Required] [Min(0)] public decimal Budget { get; set; }
     [Required] public TimeSpan Duration { get; set; }
+    [Required] public int CountryId { get; set; }
+
 }
