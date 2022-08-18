@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using InCinema.Exceptions;
+using InCinema.Models.Countries;
 using InCinema.Models.Genres;
 using InCinema.Models.Movies;
 using InCinema.Repositories;
@@ -36,16 +37,22 @@ public class MoviesService
 
     public MoviePreview Create(MovieCreate movieCreate)
     {
+        Country country = _applicationContext.Countries.GetById(movieCreate.CountryId);
         var movie = _mapper.Map<Movie>(movieCreate);
+        movie.Country = country;
+        
         _applicationContext.Movies.Add(movie);
-
+        
         return _mapper.Map<MoviePreview>(movie);
     }
 
     public MoviePreview Update(MovieUpdate movieUpdate)
     {
         _applicationContext.Movies.GetById(movieUpdate.Id);
+        Country country = _applicationContext.Countries.GetById(movieUpdate.CountryId);
         var movie = _mapper.Map<Movie>(movieUpdate);
+        movie.Country = country;
+        
         _applicationContext.Movies.Update(movie);
 
         return _mapper.Map<MoviePreview>(movie);
