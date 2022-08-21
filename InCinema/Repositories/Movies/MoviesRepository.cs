@@ -50,9 +50,9 @@ public class MoviesRepository : IMoviesRepository
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlString = @"insert into Movies values ( 
-                           @Name, @Description,
-                           @ReleaseDate, @Budget, 
-                           @Duration, @CountryId) select @@IDENTITY";
+                          @Name, @Description,
+                          @ReleaseDate, @Budget, 
+                          @Duration, @CountryId) select @@IDENTITY";
 
         int movieId = connection.QuerySingle<int>(sqlString, new
         {
@@ -66,10 +66,10 @@ public class MoviesRepository : IMoviesRepository
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = @"update Movies set 
-                  Name = @Name,  Description = @Description,
-                  ReleaseDate = @ReleaseDate, Budget = @Budget,
-                  Duration = @Duration,CountryId = @CountryId
-                  where Id = @Id";
+                         Name = @Name,  Description = @Description,
+                         ReleaseDate = @ReleaseDate, Budget = @Budget,
+                         Duration = @Duration,CountryId = @CountryId
+                         where Id = @Id";
 
         connection.Execute(sqlQuery, new
         {

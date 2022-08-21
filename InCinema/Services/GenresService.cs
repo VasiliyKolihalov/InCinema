@@ -43,11 +43,16 @@ public class GenresService
     public GenreView Update(GenreUpdate genreUpdate)
     {
         _applicationContext.Genres.GetById(genreUpdate.Id);
-        var genre = _mapper.Map<Genre>(genreUpdate);
+        
+        Genre? genre = _applicationContext.Genres.GetByName(genreUpdate.Name);
+        if (genre != null)
+            throw new BadRequestException("Genre with with name already exist");
+        
+        var updateGenre = _mapper.Map<Genre>(genreUpdate);
 
-        _applicationContext.Genres.Update(genre);
+        _applicationContext.Genres.Update(updateGenre);
 
-        return _mapper.Map<GenreView>(genre);
+        return _mapper.Map<GenreView>(updateGenre);
     }
 
     public GenreView Delete(int genreId)
