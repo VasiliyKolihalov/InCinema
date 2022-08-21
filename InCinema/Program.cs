@@ -16,7 +16,8 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services
     .AddTransient<MoviesService>()
-    .AddTransient<GenresService>();
+    .AddTransient<GenresService>()
+    .AddTransient<MoviePersonsService>();
 
 #endregion
 

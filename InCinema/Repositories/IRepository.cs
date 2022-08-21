@@ -1,6 +1,6 @@
 ﻿namespace InCinema.Repositories;
 
-public interface IRepository<TItem, in TId>
+public interface IRepository<TItem, in TId> where TItem : class
 {
     public IEnumerable<TItem> GetAll();
     public TItem GetById(TId id);
