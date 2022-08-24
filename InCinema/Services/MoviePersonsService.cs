@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using InCinema.Exceptions;
+using InCinema.Models.Careers;
 using InCinema.Models.Countries;
 using InCinema.Models.MoviePersons;
 using InCinema.Models.Movies;
@@ -26,7 +28,12 @@ public class MoviePersonsService
     public MoviePersonView GetById(int moviePersonId)
     {
         MoviePerson moviePerson = _applicationContext.MoviePersons.GetById(moviePersonId);
-        return _mapper.Map<MoviePersonView>(moviePerson);
+        IEnumerable<Career> careers = _applicationContext.Careers.GetByMoviePerson(moviePersonId); 
+        
+        var moviePersonView = _mapper.Map<MoviePersonView>(moviePerson);
+        moviePersonView.Careers = _mapper.Map<IEnumerable<CareerView>>(careers);
+        
+        return moviePersonView;
     }
 
     public MoviePersonPreview Create(MoviePersonCreate moviePersonCreate)
@@ -61,5 +68,35 @@ public class MoviePersonsService
         return _mapper.Map<MoviePersonPreview>(moviePerson);
     }
     
+    #region Careers
+
+    public MoviePersonPreview AddCareer(int moviePersonId, int careerId)
+    {
+        MoviePerson moviePerson = _applicationContext.MoviePersons.GetById(moviePersonId);
+        _applicationContext.Careers.GetById(careerId);
+
+        IEnumerable<Career> careers = _applicationContext.Careers.GetByMoviePerson(moviePersonId);
+        if (careers.Any(x => x.Id == careerId))
+            throw new BadRequestException("Movie-person already have this career");
+        
+        _applicationContext.Careers.AddToMoviePerson(careerId, moviePersonId);
+
+        return _mapper.Map<MoviePersonPreview>(moviePerson);
+    }
+
+    public MoviePersonPreview DeleteCareer(int moviePersonId, int careerId)
+    {
+        MoviePerson moviePerson = _applicationContext.MoviePersons.GetById(moviePersonId);
+        _applicationContext.Careers.GetById(careerId);
+
+        IEnumerable<Career> careers = _applicationContext.Careers.GetByMoviePerson(moviePersonId);
+        if (careers.All(x => x.Id != careerId))
+            throw new BadRequestException("Movie-person does not have this career");
+        
+        _applicationContext.Careers.DeleteFromMoviePerson(careerId, moviePersonId);
+        
+        return _mapper.Map<MoviePersonPreview>(moviePerson);
+    }
     
+    #endregion
 }

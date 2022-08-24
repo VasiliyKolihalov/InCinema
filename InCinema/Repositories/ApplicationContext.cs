@@ -1,4 +1,5 @@
-﻿using InCinema.Repositories.Countries;
+﻿using InCinema.Repositories.Careers;
+using InCinema.Repositories.Countries;
 using InCinema.Repositories.Genres;
 using InCinema.Repositories.MoviePersons;
 using InCinema.Repositories.Movies;
@@ -10,7 +11,8 @@ public class ApplicationContext : IApplicationContext
     public IMoviesRepository Movies { get; }
     public IGenresRepository Genres { get; }
     public ICountriesRepository Countries { get; }
-    public IMoviePersonsRepository MoviePersons { get; set; }
+    public IMoviePersonsRepository MoviePersons { get; }
+    public ICareersRepository Careers { get; }
 
     public ApplicationContext(string connectionString)
     {
@@ -18,5 +20,6 @@ public class ApplicationContext : IApplicationContext
         Genres = new GenresRepository(connectionString);
         Countries = new CountriesRepository(connectionString);
         MoviePersons = new MoviePersonsRepository(connectionString);
+        Careers = new CareersRepository(connectionString);
     }
 }

@@ -12,5 +12,5 @@ public class MovieView
     public decimal Budget { get; set; }
     public TimeSpan Duration { get; set; }
     public CountryView Country { get; set; }
-    public List<GenreView> Genres { get; set; }
+    public IEnumerable<GenreView> Genres { get; set; }
 }

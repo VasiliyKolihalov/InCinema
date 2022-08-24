@@ -41,7 +41,7 @@ public class MoviePersonsRepository : IMoviePersonsRepository
         }, new {id}).FirstOrDefault();
 
         if (moviePerson == null)
-            throw new NotFoundException("Movie not found");
+            throw new NotFoundException("Movie-person not found");
 
         return moviePerson;
     }

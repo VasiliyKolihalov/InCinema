@@ -1,4 +1,5 @@
-﻿using InCinema.Repositories.Countries;
+﻿using InCinema.Repositories.Careers;
+using InCinema.Repositories.Countries;
 using InCinema.Repositories.Genres;
 using InCinema.Repositories.MoviePersons;
 using InCinema.Repositories.Movies;
@@ -11,4 +12,5 @@ public interface IApplicationContext
     public IGenresRepository Genres { get; }
     public ICountriesRepository Countries { get; }
     public IMoviePersonsRepository MoviePersons { get; }
+    public ICareersRepository Careers { get; }
 }

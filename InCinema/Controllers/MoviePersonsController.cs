@@ -49,4 +49,24 @@ public class MoviePersonsController : ControllerBase
         MoviePersonPreview moviePersonPreview = _moviePersonsService.Delete(moviePersonId);
         return Ok(moviePersonPreview);
     }
+    
+    #region Careers
+
+    [Route("{moviePersonId}/careers/{careerId}/add")]
+    [HttpPost]
+    public ActionResult<MoviePersonPreview> AddCareer(int moviePersonId, int careerId)
+    {
+        MoviePersonPreview moviePersonPreview = _moviePersonsService.AddCareer(moviePersonId, careerId);
+        return Ok(moviePersonPreview);
+    }
+    
+    [Route("{moviePersonId}/careers/{careerId}/delete")]
+    [HttpDelete]
+    public ActionResult<MoviePersonPreview> DeleteCareer(int moviePersonId, int careerId)
+    {
+        MoviePersonPreview moviePersonPreview = _moviePersonsService.DeleteCareer(moviePersonId, careerId);
+        return Ok(moviePersonPreview);
+    }
+
+    #endregion
 }
