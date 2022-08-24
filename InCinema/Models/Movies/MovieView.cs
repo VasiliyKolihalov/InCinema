@@ -1,5 +1,6 @@
 ﻿using InCinema.Models.Countries;
 using InCinema.Models.Genres;
+using InCinema.Models.MoviePersons;
 
 namespace InCinema.Models.Movies;
 
@@ -12,5 +13,6 @@ public class MovieView
     public decimal Budget { get; set; }
     public TimeSpan Duration { get; set; }
     public CountryView Country { get; set; }
+    public MoviePersonPreview Director { get; set; }
     public IEnumerable<GenreView> Genres { get; set; }
 }

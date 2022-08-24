@@ -11,4 +11,5 @@ public class Movie
     public decimal Budget { get; set; }
     public TimeSpan Duration { get; set; }
     public Country Country { get; set; }
+    public int DirectorId { get; set; }
 }
