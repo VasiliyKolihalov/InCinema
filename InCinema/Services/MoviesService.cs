@@ -2,6 +2,7 @@
 using InCinema.Exceptions;
 using InCinema.Models.Countries;
 using InCinema.Models.Genres;
+using InCinema.Models.MoviePersons;
 using InCinema.Models.Movies;
 using InCinema.Repositories;
 
@@ -27,16 +28,21 @@ public class MoviesService
     public MovieView GetById(int movieId)
     {
         Movie movie = _applicationContext.Movies.GetById(movieId);
-
         var movieView = _mapper.Map<MovieView>(movie);
+        
         IEnumerable<Genre> genres = _applicationContext.Genres.GetByMovie(movieId);
         movieView.Genres = _mapper.Map<IEnumerable<GenreView>>(genres);
+        
+        MoviePerson director = _applicationContext.MoviePersons.GetById(movie.DirectorId);
+        movieView.Director = _mapper.Map<MoviePersonPreview>(director);
 
         return movieView;
     }
 
     public MoviePreview Create(MovieCreate movieCreate)
     {
+        _applicationContext.MoviePersons.GetById(movieCreate.DirectorId);
+        
         Country country = _applicationContext.Countries.GetById(movieCreate.CountryId);
         var movie = _mapper.Map<Movie>(movieCreate);
         movie.Country = country;
@@ -48,7 +54,9 @@ public class MoviesService
 
     public MoviePreview Update(MovieUpdate movieUpdate)
     {
+        _applicationContext.MoviePersons.GetById(movieUpdate.DirectorId);
         _applicationContext.Movies.GetById(movieUpdate.Id);
+        
         Country country = _applicationContext.Countries.GetById(movieUpdate.CountryId);
         var movie = _mapper.Map<Movie>(movieUpdate);
         movie.Country = country;

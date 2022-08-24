@@ -34,6 +34,7 @@ public class MoviesRepository : IMoviesRepository
         var sqlQuery = @"select * from Movies 
                          inner join Countries on Movies.CountryId = Countries.Id 
                          where Movies.Id = @id";
+        
         Movie? movie = connection.Query<Movie, Country, Movie>(sqlQuery, (movie, county) =>
         {
             movie.Country = county;
@@ -52,12 +53,13 @@ public class MoviesRepository : IMoviesRepository
         var sqlString = @"insert into Movies values ( 
                           @Name, @Description,
                           @ReleaseDate, @Budget, 
-                          @Duration, @CountryId) select @@IDENTITY";
+                          @Duration, @CountryId, 
+                          @DirectorId) select @@IDENTITY";
 
         int movieId = connection.QuerySingle<int>(sqlString, new
         {
-            item.Name, item.Description, item.ReleaseDate, item.Budget, item.Duration,
-            CountryId = item.Country.Id
+            item.Name, item.Description, item.ReleaseDate,
+            item.Budget, item.Duration, CountryId = item.Country.Id, item.DirectorId
         });
         item.Id = movieId;
     }
@@ -68,13 +70,15 @@ public class MoviesRepository : IMoviesRepository
         var sqlQuery = @"update Movies set 
                          Name = @Name,  Description = @Description,
                          ReleaseDate = @ReleaseDate, Budget = @Budget,
-                         Duration = @Duration,CountryId = @CountryId
+                         Duration = @Duration, CountryId = @CountryId, 
+                         DirectorId = @DirectorId
                          where Id = @Id";
 
         connection.Execute(sqlQuery, new
         {
-            item.Id, item.Name, item.Description, item.ReleaseDate, item.Budget, item.Duration,
-            CountryId = item.Country.Id
+            item.Id, item.Name, item.Description,
+            item.ReleaseDate, item.Budget, item.Duration, 
+            CountryId = item.Country.Id, item.DirectorId
         });
     }
 

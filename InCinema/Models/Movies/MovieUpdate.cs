@@ -12,4 +12,5 @@ public class MovieUpdate
     [Required] [Min(0)] public decimal Budget { get; set; }
     [Required] public TimeSpan Duration { get; set; }
     [Required] public int CountryId { get; set; }
+    [Required] public int DirectorId { get; set; }
 }
