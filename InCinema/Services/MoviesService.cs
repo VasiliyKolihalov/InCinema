@@ -30,7 +30,7 @@ public class MoviesService
 
         var movieView = _mapper.Map<MovieView>(movie);
         IEnumerable<Genre> genres = _applicationContext.Genres.GetByMovie(movieId);
-        movieView.Genres = _mapper.Map<List<GenreView>>(genres);
+        movieView.Genres = _mapper.Map<IEnumerable<GenreView>>(genres);
 
         return movieView;
     }

@@ -35,6 +35,7 @@ public class GenresService
             throw new BadRequestException("Genre with with name already exist");
 
         var newGenre = _mapper.Map<Genre>(genreCreate);
+        
         _applicationContext.Genres.Add(newGenre);
         
         return _mapper.Map<GenreView>(newGenre);
@@ -45,7 +46,7 @@ public class GenresService
         _applicationContext.Genres.GetById(genreUpdate.Id);
         
         Genre? genre = _applicationContext.Genres.GetByName(genreUpdate.Name);
-        if (genre != null)
+        if (genre != null && genre.Id != genreUpdate.Id)
             throw new BadRequestException("Genre with with name already exist");
         
         var updateGenre = _mapper.Map<Genre>(genreUpdate);
