@@ -68,7 +68,7 @@ public class MoviePersonsRepository : IMoviePersonsRepository
                          FirstName = @FirstName, LastName = @LastName,
                          BirthDate = @BirthDate, CountryId= @CountryId
                          where Id = @Id";
-        
+
         connection.Execute(sqlQuery, new
         {
             item.Id, item.FirstName,
@@ -81,5 +81,37 @@ public class MoviePersonsRepository : IMoviePersonsRepository
     {
         using var connection = new SqlConnection(_connectionKey);
         connection.Execute("delete from MoviePersons where Id = @id", new {id});
+    }
+
+    public IEnumerable<MoviePerson> GetActorsByMovie(int movieId)
+    {
+        using var connection = new SqlConnection(_connectionKey);
+        var sqlQuery = @"select * from MoviePersons
+                         inner join Countries on MoviePersons.CountryId = Countries.Id
+                         inner join MoviesActors on MoviePersons.Id = MoviesActors.MoviePersonId
+                         where MoviesActors.MovieId = @movieId";
+
+        IEnumerable<MoviePerson> moviePersons = connection.Query<MoviePerson, Country, MoviePerson>(sqlQuery,
+            map: (person, country) =>
+            {
+                person.Country = country;
+                return person;
+            }, new {movieId});
+
+        return moviePersons;
+    }
+
+    public void AddToMoviesActors(int moviePersonId, int movieId)
+    {
+        using var connection = new SqlConnection(_connectionKey);
+        var sqlQuery = "insert into MoviesActors values (@movieId, @moviePersonId)";
+        connection.Execute(sqlQuery, new {movieId, moviePersonId});
+    }
+
+    public void DeleteFromMoviesActors(int moviePersonId, int movieId)
+    {
+        using var connection = new SqlConnection(_connectionKey);
+        var sqlQuery = "delete from MoviesActors where MovieId = @movieId and MoviePersonId = @moviePersonId";
+        connection.Execute(sqlQuery, new {movieId, moviePersonId});
     }
 }

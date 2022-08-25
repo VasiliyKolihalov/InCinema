@@ -62,8 +62,15 @@ public class MoviePersonsService
     public MoviePersonPreview Delete(int moviePersonId)
     {
         MoviePerson moviePerson = _applicationContext.MoviePersons.GetById(moviePersonId);
-        
-        _applicationContext.MoviePersons.Delete(moviePersonId);
+
+        try
+        {
+            _applicationContext.MoviePersons.Delete(moviePersonId);
+        }
+        catch (Exception exception)
+        {
+            throw new BadRequestException(exception.Message);
+        }
 
         return _mapper.Map<MoviePersonPreview>(moviePerson);
     }
