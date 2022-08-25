@@ -14,5 +14,6 @@ public class MovieView
     public TimeSpan Duration { get; set; }
     public CountryView Country { get; set; }
     public MoviePersonPreview Director { get; set; }
+    public IEnumerable<MoviePersonPreview> Actors { get; set; }
     public IEnumerable<GenreView> Genres { get; set; }
 }

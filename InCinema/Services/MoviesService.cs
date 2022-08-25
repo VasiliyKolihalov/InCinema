@@ -30,12 +30,15 @@ public class MoviesService
         Movie movie = _applicationContext.Movies.GetById(movieId);
         var movieView = _mapper.Map<MovieView>(movie);
         
-        IEnumerable<Genre> genres = _applicationContext.Genres.GetByMovie(movieId);
-        movieView.Genres = _mapper.Map<IEnumerable<GenreView>>(genres);
-        
         MoviePerson director = _applicationContext.MoviePersons.GetById(movie.DirectorId);
         movieView.Director = _mapper.Map<MoviePersonPreview>(director);
 
+        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovie(movieId);
+        movieView.Actors = _mapper.Map<IEnumerable<MoviePersonPreview>>(actors);
+
+        IEnumerable<Genre> genres = _applicationContext.Genres.GetByMovie(movieId);
+        movieView.Genres = _mapper.Map<IEnumerable<GenreView>>(genres);
+        
         return movieView;
     }
 
@@ -100,6 +103,38 @@ public class MoviesService
             throw new BadRequestException("Movie does not have this genre");
 
         _applicationContext.Genres.DeleteFromMovies(genreId, movieId);
+
+        return _mapper.Map<MoviePreview>(movie);
+    }
+
+    #endregion
+
+    #region Actors
+
+    public MoviePreview AddToActors(int movieId, int moviePersonId)
+    {
+        Movie movie = _applicationContext.Movies.GetById(movieId);
+        _applicationContext.MoviePersons.GetById(moviePersonId);
+
+        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovie(movieId);
+        if (actors.Any(x => x.Id == moviePersonId))
+            throw new BadRequestException("Movie-person already an actor in this movie");
+        
+        _applicationContext.MoviePersons.AddToMoviesActors(moviePersonId, movieId);
+
+        return _mapper.Map<MoviePreview>(movie);
+    }
+
+    public MoviePreview DeleteFromActors(int movieId, int moviePersonId)
+    {
+        Movie movie = _applicationContext.Movies.GetById(movieId);
+        _applicationContext.MoviePersons.GetById(moviePersonId);
+
+        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovie(movieId);
+        if (actors.All(x => x.Id != moviePersonId))
+            throw new BadRequestException("Movie-person not an actor in this movie");
+        
+        _applicationContext.MoviePersons.DeleteFromMoviesActors(moviePersonId, movieId);
 
         return _mapper.Map<MoviePreview>(movie);
     }

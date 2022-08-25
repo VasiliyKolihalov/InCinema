@@ -69,4 +69,24 @@ public class MoviesController : ControllerBase
     }
 
     #endregion
+    
+    #region Actors
+
+    [Route("{movieId}/actors/{moviePersonId}/add")]
+    [HttpPost]
+    public ActionResult<MoviePreview> AddToActors(int movieId, int moviePersonId)
+    {
+        MoviePreview moviePreview = _moviesService.AddToActors(movieId, moviePersonId);
+        return Ok(moviePreview);
+    }
+    
+    [Route("{movieId}/actors/{moviePersonId}/delete")]
+    [HttpDelete]
+    public ActionResult<MoviePreview> DeleteFromActors(int movieId, int moviePersonId)
+    {
+        MoviePreview moviePreview = _moviesService.DeleteFromActors(movieId, moviePersonId);
+        return Ok(moviePreview);
+    }
+
+    #endregion
 }
