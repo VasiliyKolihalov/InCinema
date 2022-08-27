@@ -106,4 +106,24 @@ public class MoviePersonsService
     }
     
     #endregion
+
+    #region Work
+
+    public IEnumerable<MoviePreview> GetWorkAsDirector(int moviePersonId)
+    {
+        _applicationContext.MoviePersons.GetById(moviePersonId);
+
+        IEnumerable<Movie> movies = _applicationContext.Movies.GetByDirectorId(moviePersonId);
+        return _mapper.Map<IEnumerable<MoviePreview>>(movies);
+    }
+
+    public IEnumerable<MoviePreview> GetWorkAsActor(int moviePersonId)
+    {
+        _applicationContext.MoviePersons.GetById(moviePersonId);
+
+        IEnumerable<Movie> movies = _applicationContext.Movies.GetByActorId(moviePersonId);
+        return _mapper.Map<IEnumerable<MoviePreview>>(movies);
+    }
+
+    #endregion
 }

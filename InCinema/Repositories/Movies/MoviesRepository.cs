@@ -34,7 +34,7 @@ public class MoviesRepository : IMoviesRepository
         var sqlQuery = @"select * from Movies 
                          inner join Countries on Movies.CountryId = Countries.Id 
                          where Movies.Id = @id";
-        
+
         Movie? movie = connection.Query<Movie, Country, Movie>(sqlQuery, (movie, county) =>
         {
             movie.Country = county;
@@ -77,7 +77,7 @@ public class MoviesRepository : IMoviesRepository
         connection.Execute(sqlQuery, new
         {
             item.Id, item.Name, item.Description,
-            item.ReleaseDate, item.Budget, item.Duration, 
+            item.ReleaseDate, item.Budget, item.Duration,
             CountryId = item.Country.Id, item.DirectorId
         });
     }
@@ -86,5 +86,38 @@ public class MoviesRepository : IMoviesRepository
     {
         using var connection = new SqlConnection(_connectionKey);
         connection.Execute("delete from Movies where Id = @id", new {id});
+    }
+
+    public IEnumerable<Movie> GetByDirectorId(int moviePersonId)
+    {
+        using var connection = new SqlConnection(_connectionKey);
+        var sqlQuery = @"select * from Movies
+                         inner join Countries on Movies.CountryId = Countries.Id
+                         where DirectorId = @moviePersonId";
+
+        IEnumerable<Movie> movies = connection.Query<Movie, Country, Movie>(sqlQuery, (movie, country) =>
+        {
+            movie.Country = country;
+            return movie;
+        }, new {moviePersonId});
+        
+        return movies;
+    }
+
+    public IEnumerable<Movie> GetByActorId(int moviePersonId)
+    {
+        using var connection = new SqlConnection(_connectionKey);
+        var sqlQuery = @"select * from Movies
+                         inner join Countries on Movies.CountryId = Countries.Id
+                         inner join MoviesActors on Movies.Id = MoviesActors.MovieId
+                         where MoviesActors.MoviePersonId = @moviePersonId";
+
+        IEnumerable<Movie> movies = connection.Query<Movie, Country, Movie>(sqlQuery, (movie, country) =>
+        {
+            movie.Country = country;
+            return movie;
+        }, new {moviePersonId});
+
+        return movies;
     }
 }

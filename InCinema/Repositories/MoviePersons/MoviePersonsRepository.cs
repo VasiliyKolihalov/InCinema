@@ -83,7 +83,7 @@ public class MoviePersonsRepository : IMoviePersonsRepository
         connection.Execute("delete from MoviePersons where Id = @id", new {id});
     }
 
-    public IEnumerable<MoviePerson> GetActorsByMovie(int movieId)
+    public IEnumerable<MoviePerson> GetActorsByMovieId(int movieId)
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = @"select * from MoviePersons

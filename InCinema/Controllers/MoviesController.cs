@@ -52,7 +52,7 @@ public class MoviesController : ControllerBase
 
     #region Genres
 
-    [Route("{movieId}/genres/{genreId}/add")]
+    [Route("{movieId}/genres/{genreId}")]
     [HttpPost]
     public ActionResult<MoviePreview> AddGenre(int movieId, int genreId)
     {
@@ -60,7 +60,7 @@ public class MoviesController : ControllerBase
         return Ok(moviePreview);
     }
     
-    [Route("{movieId}/genres/{genreId}/delete")]
+    [Route("{movieId}/genres/{genreId}")]
     [HttpDelete]
     public ActionResult<MoviePreview> DeleteGenre(int movieId, int genreId)
     {
@@ -72,7 +72,7 @@ public class MoviesController : ControllerBase
     
     #region Actors
 
-    [Route("{movieId}/actors/{moviePersonId}/add")]
+    [Route("{movieId}/actors/{moviePersonId}")]
     [HttpPost]
     public ActionResult<MoviePreview> AddToActors(int movieId, int moviePersonId)
     {
@@ -80,7 +80,7 @@ public class MoviesController : ControllerBase
         return Ok(moviePreview);
     }
     
-    [Route("{movieId}/actors/{moviePersonId}/delete")]
+    [Route("{movieId}/actors/{moviePersonId}")]
     [HttpDelete]
     public ActionResult<MoviePreview> DeleteFromActors(int movieId, int moviePersonId)
     {
