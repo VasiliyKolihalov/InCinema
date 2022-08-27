@@ -1,4 +1,5 @@
 ﻿using InCinema.Models.MoviePersons;
+using InCinema.Models.Movies;
 using InCinema.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,7 +53,7 @@ public class MoviePersonsController : ControllerBase
     
     #region Careers
 
-    [Route("{moviePersonId}/careers/{careerId}/add")]
+    [Route("{moviePersonId}/careers/{careerId}")]
     [HttpPost]
     public ActionResult<MoviePersonPreview> AddCareer(int moviePersonId, int careerId)
     {
@@ -60,12 +61,32 @@ public class MoviePersonsController : ControllerBase
         return Ok(moviePersonPreview);
     }
     
-    [Route("{moviePersonId}/careers/{careerId}/delete")]
+    [Route("{moviePersonId}/careers/{careerId}")]
     [HttpDelete]
     public ActionResult<MoviePersonPreview> DeleteCareer(int moviePersonId, int careerId)
     {
         MoviePersonPreview moviePersonPreview = _moviePersonsService.DeleteCareer(moviePersonId, careerId);
         return Ok(moviePersonPreview);
+    }
+
+    #endregion
+
+    #region Work
+
+    [Route("{moviePersonId}/WorkAsDirector")]
+    [HttpGet]
+    public ActionResult<IEnumerable<MoviePreview>> GetWorkAsDirector(int moviePersonId)
+    {
+        IEnumerable<MoviePreview> moviePreviews = _moviePersonsService.GetWorkAsDirector(moviePersonId);
+        return Ok(moviePreviews);
+    }
+    
+    [Route("{moviePersonId}/WorkAsActor")]
+    [HttpGet]
+    public ActionResult<IEnumerable<MoviePreview>> GetWorkAsActor(int moviePersonId)
+    {
+        IEnumerable<MoviePreview> moviePreviews = _moviePersonsService.GetWorkAsActor(moviePersonId);
+        return Ok(moviePreviews);
     }
 
     #endregion

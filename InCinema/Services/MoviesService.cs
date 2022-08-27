@@ -33,7 +33,7 @@ public class MoviesService
         MoviePerson director = _applicationContext.MoviePersons.GetById(movie.DirectorId);
         movieView.Director = _mapper.Map<MoviePersonPreview>(director);
 
-        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovie(movieId);
+        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovieId(movieId);
         movieView.Actors = _mapper.Map<IEnumerable<MoviePersonPreview>>(actors);
 
         IEnumerable<Genre> genres = _applicationContext.Genres.GetByMovie(movieId);
@@ -116,7 +116,7 @@ public class MoviesService
         Movie movie = _applicationContext.Movies.GetById(movieId);
         _applicationContext.MoviePersons.GetById(moviePersonId);
 
-        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovie(movieId);
+        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovieId(movieId);
         if (actors.Any(x => x.Id == moviePersonId))
             throw new BadRequestException("Movie-person already an actor in this movie");
         
@@ -130,7 +130,7 @@ public class MoviesService
         Movie movie = _applicationContext.Movies.GetById(movieId);
         _applicationContext.MoviePersons.GetById(moviePersonId);
 
-        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovie(movieId);
+        IEnumerable<MoviePerson> actors = _applicationContext.MoviePersons.GetActorsByMovieId(movieId);
         if (actors.All(x => x.Id != moviePersonId))
             throw new BadRequestException("Movie-person not an actor in this movie");
         
