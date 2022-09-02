@@ -1,0 +1,8 @@
+﻿{
+  "JwtAuthData": {
+    "Issuer": "InCinema",
+    "Audience": "InCinema",
+    "Secret": "adggxiVdgD{azW2J1agdq|o1",
+    "TokenMinuteLifetime": 25
+  }
+}
