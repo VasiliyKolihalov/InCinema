@@ -1,5 +1,7 @@
-﻿using InCinema.Models.Genres;
+﻿using InCinema.Constants;
+using InCinema.Models.Genres;
 using InCinema.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InCinema.Controllers;
@@ -29,6 +31,7 @@ public class GenresController : ControllerBase
         return Ok(genreView);
     }
 
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpPost]
     public ActionResult<GenreView> Post(GenreCreate genreCreate)
     {
@@ -36,6 +39,7 @@ public class GenresController : ControllerBase
         return Ok(genreView);
     }
 
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpPut]
     public ActionResult<GenreView> Put(GenreUpdate genreUpdate)
     {
@@ -43,6 +47,7 @@ public class GenresController : ControllerBase
         return Ok(genreView);
     }
 
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpDelete("{genreId}")]
     public ActionResult<GenreView> Delete(int genreId)
     {

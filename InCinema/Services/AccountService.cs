@@ -1,14 +1,9 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using InCinema.Exceptions;
-using InCinema.Models;
+using InCinema.Models.Roles;
 using InCinema.Models.Users;
 using InCinema.Repositories;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
-using BCryptNet = BCrypt.Net.BCrypt; 
+using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace InCinema.Services;
 
@@ -16,14 +11,13 @@ public class AccountService
 {
     private readonly IApplicationContext _applicationContext;
     private readonly IMapper _mapper;
-    private readonly IOptions<JwtAuthOptions> _jwtAuthOptions;
+    private readonly IJwtService _jwtService;
 
-    public AccountService(IApplicationContext applicationContext, IMapper mapper,
-        IOptions<JwtAuthOptions> jwtAuthOptions)
+    public AccountService(IApplicationContext applicationContext, IMapper mapper, IJwtService jwtService)
     {
         _applicationContext = applicationContext;
         _mapper = mapper;
-        _jwtAuthOptions = jwtAuthOptions;
+        _jwtService = jwtService;
     }
 
     public string Register(UserCreate userCreate)
@@ -31,15 +25,15 @@ public class AccountService
         User? user = _applicationContext.Users.GetByEmail(userCreate.Email);
         if (user != null)
             throw new BadRequestException("User with this email already exist");
-        
+
         User newUser = _mapper.Map<User>(userCreate);
         newUser.PasswordHash = BCryptNet.HashPassword(userCreate.Password);
-        
+
         _applicationContext.Users.Add(newUser);
-        
-        return GenerateJwt(newUser);
+
+        return _jwtService.GenerateJwt(newUser);
     }
-    
+
     public string Login(UserLogin userLogin)
     {
         User? user = _applicationContext.Users.GetByEmail(userLogin.Email);
@@ -49,29 +43,8 @@ public class AccountService
         if (!BCryptNet.Verify(userLogin.Password, user.PasswordHash))
             throw new BadRequestException("Incorrect login or password");
 
-        return GenerateJwt(user);
-    }
+        IEnumerable<Role> roles = _applicationContext.Roles.GetByUserId(user.Id);
 
-    private string GenerateJwt(User user)
-    {
-        JwtAuthOptions jwtAuthOptions = _jwtAuthOptions.Value;
-
-        SymmetricSecurityKey securityKey = jwtAuthOptions.GetSymmetricSecurityKey();
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var claims = new List<Claim>
-        {
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Sub, user.Id.ToString())
-        };
-
-        var token = new JwtSecurityToken(
-            jwtAuthOptions.Issuer,
-            jwtAuthOptions.Audience,
-            claims,
-            expires: DateTime.Now.AddMinutes(jwtAuthOptions.TokenMinuteLifetime),
-            signingCredentials: credentials);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return _jwtService.GenerateJwt(user, roles);
     }
 }

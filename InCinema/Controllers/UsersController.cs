@@ -1,4 +1,5 @@
-﻿using InCinema.Extensions;
+﻿using InCinema.Constants;
+using InCinema.Extensions;
 using InCinema.Models.Users;
 using InCinema.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -38,10 +39,29 @@ public class UsersController : ControllerBase
         return Ok(userView);
     }
 
-    [HttpDelete("{userId}")]
-    public ActionResult<UserPreview> Delete(int userId)
+    [Authorize]
+    [HttpDelete("{userToDeleteId}")]
+    public ActionResult<UserPreview> Delete(int userToDeleteId)
     {
-        UserPreview userPreview = _usersService.Delete(userId);
+        UserPreview userPreview = _usersService.Delete(userToDeleteId, this.GetUserId());
+        return Ok(userPreview);
+    }
+
+    [Authorize(Roles = RoleNames.UsersAdministrator)]
+    [Route("{userId}/roles/{roleId}")]
+    [HttpPost]
+    public ActionResult<UserPreview> AddRole(int userId, int roleId)
+    {
+        UserPreview userPreview = _usersService.AddRole(userId, roleId);
+        return Ok(userPreview);
+    }
+    
+    [Authorize(Roles = RoleNames.UsersAdministrator)]
+    [Route("{userId}/roles/{roleId}")]
+    [HttpDelete]
+    public ActionResult<UserPreview> DeleteRole(int userId, int roleId)
+    {
+        UserPreview userPreview = _usersService.DeleteRole(userId, roleId);
         return Ok(userPreview);
     }
 }

@@ -1,6 +1,8 @@
-﻿using InCinema.Models.MoviePersons;
+﻿using InCinema.Constants;
+using InCinema.Models.MoviePersons;
 using InCinema.Models.Movies;
 using InCinema.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InCinema.Controllers;
@@ -30,6 +32,7 @@ public class MoviePersonsController : ControllerBase
         return Ok(moviePersonView);
     }
 
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpPost]
     public ActionResult<MoviePersonPreview> Post(MoviePersonCreate moviePersonCreate)
     {
@@ -37,6 +40,7 @@ public class MoviePersonsController : ControllerBase
         return Ok(moviePersonPreview);
     }
 
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpPut]
     public ActionResult<MoviePersonPreview> Put(MoviePersonUpdate moviePersonUpdate)
     {
@@ -44,6 +48,7 @@ public class MoviePersonsController : ControllerBase
         return Ok(moviePersonPreview);
     }
 
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpDelete("{moviePersonId}")]
     public ActionResult<MoviePersonPreview> Delete(int moviePersonId)
     {
@@ -53,6 +58,7 @@ public class MoviePersonsController : ControllerBase
     
     #region Careers
 
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [Route("{moviePersonId}/careers/{careerId}")]
     [HttpPost]
     public ActionResult<MoviePersonPreview> AddCareer(int moviePersonId, int careerId)
@@ -61,6 +67,7 @@ public class MoviePersonsController : ControllerBase
         return Ok(moviePersonPreview);
     }
     
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [Route("{moviePersonId}/careers/{careerId}")]
     [HttpDelete]
     public ActionResult<MoviePersonPreview> DeleteCareer(int moviePersonId, int careerId)

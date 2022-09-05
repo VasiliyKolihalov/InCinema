@@ -1,5 +1,7 @@
-﻿using InCinema.Models.Careers;
+﻿using InCinema.Constants;
+using InCinema.Models.Careers;
 using InCinema.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InCinema.Controllers;
@@ -29,6 +31,7 @@ public class CareersController : ControllerBase
         return Ok(careerView);
     }
     
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpPost]
     public ActionResult<CareerView> Post(CareerCreate careerCreate)
     {
@@ -36,6 +39,7 @@ public class CareersController : ControllerBase
         return Ok(careerView);
     }
     
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpPut]
     public ActionResult<CareerView> Put(CareerUpdate careerUpdate)
     {
@@ -43,6 +47,7 @@ public class CareersController : ControllerBase
         return Ok(careerView);
     }
     
+    [Authorize(Roles = RoleNames.ContentAdministrator)]
     [HttpDelete("{careerId}")]
     public ActionResult<CareerView> Delete(int careerId)
     {

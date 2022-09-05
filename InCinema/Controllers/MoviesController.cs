@@ -1,11 +1,14 @@
-﻿using InCinema.Models.Movies;
+﻿using InCinema.Constants;
+using InCinema.Models.Movies;
 using InCinema.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InCinema.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(Roles = RoleNames.ContentAdministrator)]
 public class MoviesController : ControllerBase
 {
     private readonly MoviesService _moviesService;
@@ -15,6 +18,7 @@ public class MoviesController : ControllerBase
         _moviesService = moviesService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public ActionResult<IEnumerable<MoviePreview>> GetAll()
     {
@@ -22,6 +26,7 @@ public class MoviesController : ControllerBase
         return Ok(moviePreviews);
     }
 
+    [AllowAnonymous]
     [HttpGet("{movieId}")]
     public ActionResult<MovieView> Get(int movieId)
     {
