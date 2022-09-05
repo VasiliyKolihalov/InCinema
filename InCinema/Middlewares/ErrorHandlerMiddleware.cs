@@ -28,6 +28,7 @@ public class ErrorHandlerMiddleware
             {
                 NotFoundException => (int) HttpStatusCode.NotFound,
                 BadRequestException => (int) HttpStatusCode.BadRequest,
+                ForbiddenException => (int) HttpStatusCode.Forbidden,
                 _ => (int) HttpStatusCode.InternalServerError
             };
 
