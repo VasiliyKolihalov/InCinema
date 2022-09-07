@@ -47,4 +47,21 @@ public class AccountService
 
         return _jwtService.GenerateJwt(user, roles);
     }
+
+    public string ChangePassword(ChangeUserPassword changeUserPassword)
+    {
+        User? user = _applicationContext.Users.GetByEmail(changeUserPassword.Email);
+        if(user == null)
+            throw new BadRequestException("User with this email does not exist");
+        
+        if(!BCryptNet.Verify(changeUserPassword.OldPassword, user.PasswordHash))
+            throw new BadRequestException("Incorrect login or password");
+
+        user.PasswordHash = BCryptNet.HashPassword(changeUserPassword.NewPassword);
+        _applicationContext.Users.ChangePasswordHash(user);
+        
+        IEnumerable<Role> roles = _applicationContext.Roles.GetByUserId(user.Id);
+
+        return _jwtService.GenerateJwt(user, roles);
+    }
 }

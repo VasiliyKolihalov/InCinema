@@ -57,4 +57,11 @@ public class UsersRepository : IUsersRepository
         var sqlQuery = "select * from Users where Email = @email";
         return connection.QuerySingleOrDefault<User>(sqlQuery, new {email});
     }
+
+    public void ChangePasswordHash(User user)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var sqlQuery = "update Users set PasswordHash = @PasswordHash where Id = @Id";
+        connection.Execute(sqlQuery, user);
+    }
 }
