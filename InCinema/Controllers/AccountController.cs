@@ -19,7 +19,7 @@ public class AccountController : ControllerBase
     public ActionResult Post(UserCreate userCreate)
     {
         string jwt = _accountService.Register(userCreate);
-        return Ok(new {token = jwt});
+        return Ok(new { token = jwt });
     }
 
     [Route("login")]
@@ -27,6 +27,14 @@ public class AccountController : ControllerBase
     public ActionResult Login(UserLogin userLogin)
     {
         string jwt = _accountService.Login(userLogin);
-        return Ok(new {token = jwt});
+        return Ok(new { token = jwt });
+    }
+    
+    [Route("changePassword")]
+    [HttpPut]
+    public ActionResult ChangePassword(ChangeUserPassword changeUserPassword)
+    {
+        string jwt = _accountService.ChangePassword(changeUserPassword);
+        return Ok(new { token = jwt });
     }
 }
