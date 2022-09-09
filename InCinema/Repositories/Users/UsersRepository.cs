@@ -64,4 +64,39 @@ public class UsersRepository : IUsersRepository
         var sqlQuery = "update Users set PasswordHash = @PasswordHash where Id = @Id";
         connection.Execute(sqlQuery, user);
     }
+
+    public void ChangeEmail(User user)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var sqlQuery = "update Users set Email = @Email, IsConfirmEmail = @IsConfirmEmail where Id = @Id";
+        connection.Execute(sqlQuery, user);
+    }
+
+    public string? GetEmailConfirmCode(int userId)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var sqlQuery = "select Code from UsersEmailConfirmCodes where UserId = @userId";
+        return connection.QuerySingleOrDefault<string>(sqlQuery, new { userId });
+    }
+
+    public void ConfirmEmail(int userId)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var sqlQuery = "update Users set IsConfirmEmail = 1 where Id = @userId";
+        connection.Execute(sqlQuery, new { userId });
+    }
+
+    public void AddEmailConfirmCode(int userId, string code)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var sqlQuery = "insert into UsersEmailConfirmCodes values (@userId, @code)";
+        connection.Execute(sqlQuery, new { userId, code });
+    }
+
+    public void DeleteEmailConfirmCode(int userId)
+    {
+        using var connection = new SqlConnection(_connectionString);
+        var sqlQuery = "delete from UsersEmailConfirmCodes where UserId = @userId"; 
+        connection.Execute(sqlQuery, new { userId });
+    }
 }

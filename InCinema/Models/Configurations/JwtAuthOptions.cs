@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace InCinema.Models;
+namespace InCinema.Models.Configurations;
 
 public class JwtAuthOptions
 {

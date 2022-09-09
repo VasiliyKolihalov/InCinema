@@ -1,6 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using InCinema.Models;
+using InCinema.Models.Configurations;
 using InCinema.Models.Roles;
 using InCinema.Models.Users;
 using Microsoft.Extensions.Options;
