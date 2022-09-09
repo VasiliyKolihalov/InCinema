@@ -1,4 +1,4 @@
-﻿using InCinema.Models;
+﻿using InCinema.Models.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 

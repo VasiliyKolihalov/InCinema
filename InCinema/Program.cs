@@ -1,6 +1,7 @@
 using InCinema.Extensions;
 using InCinema.Middlewares;
 using InCinema.Models;
+using InCinema.Models.Configurations;
 using InCinema.Repositories;
 using InCinema.Services;
 
@@ -8,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 #region Configuration
 
-builder.Configuration.AddJsonFile("jwtauthsettings.json");
+builder.Configuration.AddJsonFile("jwtauthoptions.json");
+builder.Configuration.AddJsonFile("companydata.json");
+builder.Configuration.AddJsonFile("emailoptions.json");
 
 #endregion
 
@@ -20,10 +23,16 @@ builder.Services.AddControllers()
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddTransient<IApplicationContext>(_ => new ApplicationContext(connectionString));
 
-IConfigurationSection jwtAuthConfiguration = builder.Configuration.GetSection("JwtAuthData");
-builder.Services.Configure<JwtAuthOptions>(jwtAuthConfiguration);
+IConfigurationSection jwtAuthOptions = builder.Configuration.GetSection("JwtAuthOptions");
+builder.Services.Configure<JwtAuthOptions>(jwtAuthOptions);
 
-builder.Services.AddJwtAuthentication(jwtAuthConfiguration.Get<JwtAuthOptions>());
+builder.Services.AddJwtAuthentication(jwtAuthOptions.Get<JwtAuthOptions>());
+
+IConfigurationSection companyData = builder.Configuration.GetSection("CompanyData");
+builder.Services.Configure<CompanyData>(companyData);
+
+IConfigurationSection emailOptions = builder.Configuration.GetSection("EmailOptions");
+builder.Services.Configure<EmailOptions>(emailOptions);
 
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -35,7 +44,9 @@ builder.Services
     .AddTransient<AccountService>()
     .AddTransient<IJwtService, JwtService>()
     .AddTransient<UsersService>()
-    .AddTransient<RolesService>();
+    .AddTransient<RolesService>()
+    .AddTransient<IConfirmCodeGenerator, ConfirmCodeGenerator>()
+    .AddTransient<IEmailService, EmailService>();
 
 #endregion
 
