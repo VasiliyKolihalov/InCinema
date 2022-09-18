@@ -3,6 +3,7 @@ using InCinema.Repositories.Countries;
 using InCinema.Repositories.Genres;
 using InCinema.Repositories.MoviePersons;
 using InCinema.Repositories.Movies;
+using InCinema.Repositories.Reviews;
 using InCinema.Repositories.Roles;
 using InCinema.Repositories.Users;
 
@@ -17,4 +18,5 @@ public interface IApplicationContext
     public ICareersRepository Careers { get; }
     public IUsersRepository Users { get; }
     public IRolesRepository Roles { get; }
+    public IReviewsRepository Reviews { get; }
 }

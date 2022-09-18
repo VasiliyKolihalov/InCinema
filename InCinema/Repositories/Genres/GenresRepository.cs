@@ -25,9 +25,8 @@ public class GenresRepository : IGenresRepository
         using var connection = new SqlConnection(_connectionKey);
 
         var sqlQuery = "select * from Genres where Id = @id";
-        var genre = connection.QuerySingleOrDefault<Genre>(sqlQuery, new {id}) ??
-                    throw new NotFoundException("Genre not found");
-        return genre;
+        return connection.QuerySingleOrDefault<Genre>(sqlQuery, new { id }) ??
+               throw new NotFoundException("Genre not found");
     }
 
     public void Add(Genre item)
@@ -47,14 +46,14 @@ public class GenresRepository : IGenresRepository
     public void Delete(int id)
     {
         using var connection = new SqlConnection(_connectionKey);
-        connection.Execute("delete from Genres where Id = @id", new {id});
+        connection.Execute("delete from Genres where Id = @id", new { id });
     }
 
     public Genre? GetByName(string genreName)
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = "select * from genres where Name = @genreName";
-        return connection.QueryFirstOrDefault<Genre>(sqlQuery, new {genreName});
+        return connection.QueryFirstOrDefault<Genre>(sqlQuery, new { genreName });
     }
 
     public IEnumerable<Genre> GetByMovie(int movieId)
@@ -64,19 +63,19 @@ public class GenresRepository : IGenresRepository
                         inner join MoviesGenres on Genres.Id = MoviesGenres.GenreId 
                         where MoviesGenres.MovieId = @movieId";
 
-        return connection.Query<Genre>(sqlQuery, new {movieId});
+        return connection.Query<Genre>(sqlQuery, new { movieId });
     }
 
     public void AddToMovie(int genreId, int movieId)
     {
         using var connection = new SqlConnection(_connectionKey);
-        connection.Execute("insert into MoviesGenres values(@movieId, @genreId)", new {genreId, movieId});
+        connection.Execute("insert into MoviesGenres values(@movieId, @genreId)", new { genreId, movieId });
     }
 
     public void DeleteFromMovies(int genreId, int movieId)
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = "delete from MoviesGenres where MovieId = @movieId and GenreId = @genreId";
-        connection.Execute(sqlQuery, new {movieId, genreId});
+        connection.Execute(sqlQuery, new { movieId, genreId });
     }
 }

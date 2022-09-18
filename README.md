@@ -10,6 +10,7 @@ InCinema это учебный проект, бекэнд базы фильмо�
 * BCrypt
 * Scriban
 * MailKit
+* Microsoft.Extensions.Caching.Memory
 
 ---
 
@@ -23,6 +24,7 @@ Microsoft SQL Server
   * Жанры
   * Режиcсёры
   * Актёры
+  * Ревью
   
 
 * Кино-персоны

@@ -37,6 +37,7 @@ public class AccountService
 
         User newUser = _mapper.Map<User>(userCreate);
         newUser.PasswordHash = BCryptNet.HashPassword(userCreate.Password);
+        newUser.IsConfirmEmail = false;
 
         _applicationContext.Users.Add(newUser);
 
