@@ -19,12 +19,11 @@ public class MoviesRepository : IMoviesRepository
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = "select * from Movies inner join Countries on Movies.CountryId = Countries.Id";
-        IEnumerable<Movie> movies = connection.Query<Movie, Country, Movie>(sqlQuery, (movie, county) =>
+        return connection.Query<Movie, Country, Movie>(sqlQuery, (movie, county) =>
         {
             movie.Country = county;
             return movie;
         });
-        return movies;
     }
 
     public Movie GetById(int id)
@@ -32,19 +31,16 @@ public class MoviesRepository : IMoviesRepository
         using var connection = new SqlConnection(_connectionKey);
 
         var sqlQuery = @"select * from Movies 
-                         inner join Countries on Movies.CountryId = Countries.Id 
-                         where Movies.Id = @id";
+                           inner join Countries on Movies.CountryId = Countries.Id
+                           where Movies.Id = @id";
 
         Movie? movie = connection.Query<Movie, Country, Movie>(sqlQuery, (movie, county) =>
         {
             movie.Country = county;
             return movie;
-        }, new {id}).FirstOrDefault();
+        }, new { id }).FirstOrDefault();
 
-        if (movie == null)
-            throw new NotFoundException("Movie not found");
-
-        return movie;
+        return movie ?? throw new NotFoundException("Movie not found");
     }
 
     public void Add(Movie item)
@@ -56,12 +52,11 @@ public class MoviesRepository : IMoviesRepository
                           @Duration, @CountryId, 
                           @DirectorId) select @@IDENTITY";
 
-        int movieId = connection.QuerySingle<int>(sqlString, new
+        item.Id = connection.QuerySingle<int>(sqlString, new
         {
             item.Name, item.Description, item.ReleaseDate,
             item.Budget, item.Duration, CountryId = item.Country.Id, item.DirectorId
         });
-        item.Id = movieId;
     }
 
     public void Update(Movie item)
@@ -85,7 +80,7 @@ public class MoviesRepository : IMoviesRepository
     public void Delete(int id)
     {
         using var connection = new SqlConnection(_connectionKey);
-        connection.Execute("delete from Movies where Id = @id", new {id});
+        connection.Execute("delete from Movies where Id = @id", new { id });
     }
 
     public IEnumerable<Movie> GetByDirectorId(int moviePersonId)
@@ -99,8 +94,8 @@ public class MoviesRepository : IMoviesRepository
         {
             movie.Country = country;
             return movie;
-        }, new {moviePersonId});
-        
+        }, new { moviePersonId });
+
         return movies;
     }
 
@@ -112,12 +107,17 @@ public class MoviesRepository : IMoviesRepository
                          inner join MoviesActors on Movies.Id = MoviesActors.MovieId
                          where MoviesActors.MoviePersonId = @moviePersonId";
 
-        IEnumerable<Movie> movies = connection.Query<Movie, Country, Movie>(sqlQuery, (movie, country) =>
+        return connection.Query<Movie, Country, Movie>(sqlQuery, (movie, country) =>
         {
             movie.Country = country;
             return movie;
-        }, new {moviePersonId});
+        }, new { moviePersonId });
+    }
 
-        return movies;
+    public double? GetScore(int movieId)
+    {
+        using var connection = new SqlConnection(_connectionKey);
+        var scoreQuery = @"select avg(cast(MovieScore as float)) from Reviews where MovieId = @movieId";
+        return connection.QuerySingleOrDefault<double?>(scoreQuery, new { movieId });
     }
 }

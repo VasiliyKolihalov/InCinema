@@ -32,8 +32,7 @@ public class CareersRepository : ICareersRepository
     {
         using var connection = new SqlConnection(_connectionString);
         var sqlQuery = "insert into Careers values (@Name, @Description) select @@IDENTITY";
-        int careerId = connection.QuerySingle<int>(sqlQuery, item);
-        item.Id = careerId;
+        item.Id = connection.QuerySingle<int>(sqlQuery, item);
     }
 
     public void Update(Career item)

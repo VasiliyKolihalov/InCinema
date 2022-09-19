@@ -1,6 +1,7 @@
 ﻿using InCinema.Models.Countries;
 using InCinema.Models.Genres;
 using InCinema.Models.MoviePersons;
+using InCinema.Models.Reviews;
 
 namespace InCinema.Models.Movies;
 
@@ -16,4 +17,6 @@ public class MovieView
     public MoviePersonPreview Director { get; set; }
     public IEnumerable<MoviePersonPreview> Actors { get; set; }
     public IEnumerable<GenreView> Genres { get; set; }
+    public IEnumerable<ReviewView> Reviews { get; set; }
+    public double? Score { get; set; }
 }

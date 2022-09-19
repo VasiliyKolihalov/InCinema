@@ -26,16 +26,18 @@ public class UsersRepository : IUsersRepository
     {
         using var connection = new SqlConnection(_connectionString);
         var sqlQuery = "select * from Users where Id = @id";
-        return connection.QuerySingleOrDefault<User>(sqlQuery, new {id}) ??
+        return connection.QuerySingleOrDefault<User>(sqlQuery, new { id }) ??
                throw new NotFoundException("User not found");
     }
 
     public void Add(User item)
     {
         using var connection = new SqlConnection(_connectionString);
-        var sqlQuery = "insert into Users values(@FirstName, @LastName, @Email, @PasswordHash) select @@IDENTITY";
-        int userId = connection.QuerySingle<int>(sqlQuery, item);
-        item.Id = userId;
+        var sqlQuery = @"insert into Users values(
+                         @FirstName, @LastName, 
+                         @Email, @PasswordHash, 
+                         @IsConfirmEmail) select @@IDENTITY";
+        item.Id = connection.QuerySingle<int>(sqlQuery, item);
     }
 
     public void Update(User item)
@@ -48,14 +50,14 @@ public class UsersRepository : IUsersRepository
     public void Delete(int id)
     {
         using var connection = new SqlConnection(_connectionString);
-        connection.Execute("delete from Users where Id = @id", new {id});
+        connection.Execute("delete from Users where Id = @id", new { id });
     }
 
     public User? GetByEmail(string email)
     {
         using var connection = new SqlConnection(_connectionString);
         var sqlQuery = "select * from Users where Email = @email";
-        return connection.QuerySingleOrDefault<User>(sqlQuery, new {email});
+        return connection.QuerySingleOrDefault<User>(sqlQuery, new { email });
     }
 
     public void ChangePasswordHash(User user)
@@ -96,7 +98,7 @@ public class UsersRepository : IUsersRepository
     public void DeleteEmailConfirmCode(int userId)
     {
         using var connection = new SqlConnection(_connectionString);
-        var sqlQuery = "delete from UsersEmailConfirmCodes where UserId = @userId"; 
+        var sqlQuery = "delete from UsersEmailConfirmCodes where UserId = @userId";
         connection.Execute(sqlQuery, new { userId });
     }
 }

@@ -11,4 +11,5 @@ public class MoviePreview
     public decimal Budget { get; set; }
     public TimeSpan Duration { get; set; }
     public CountryView Country { get; set; }
+    public double? Score { get; set; }
 }

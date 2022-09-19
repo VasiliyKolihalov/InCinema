@@ -1,6 +1,5 @@
 using InCinema.Extensions;
 using InCinema.Middlewares;
-using InCinema.Models;
 using InCinema.Models.Configurations;
 using InCinema.Repositories;
 using InCinema.Services;
@@ -17,7 +16,8 @@ builder.Configuration.AddJsonFile("emailoptions.json");
 
 #region Services
 
-builder.Services.AddControllers()
+builder.Services
+    .AddControllers()
     .AddNewtonsoftJson();
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -35,6 +35,7 @@ IConfigurationSection emailOptions = builder.Configuration.GetSection("EmailOpti
 builder.Services.Configure<EmailOptions>(emailOptions);
 
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddMemoryCache();
 
 builder.Services
     .AddTransient<MoviesService>()
@@ -46,7 +47,8 @@ builder.Services
     .AddTransient<UsersService>()
     .AddTransient<RolesService>()
     .AddTransient<IConfirmCodeGenerator, ConfirmCodeGenerator>()
-    .AddTransient<IEmailService, EmailService>();
+    .AddTransient<IEmailService, EmailService>()
+    .AddTransient<ReviewsService>();
 
 #endregion
 

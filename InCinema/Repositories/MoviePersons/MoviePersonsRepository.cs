@@ -38,12 +38,9 @@ public class MoviePersonsRepository : IMoviePersonsRepository
         {
             person.Country = country;
             return person;
-        }, new {id}).FirstOrDefault();
+        }, new { id }).FirstOrDefault();
 
-        if (moviePerson == null)
-            throw new NotFoundException("Movie-person not found");
-
-        return moviePerson;
+        return moviePerson ?? throw new NotFoundException("Movie-person not found");
     }
 
     public void Add(MoviePerson item)
@@ -53,12 +50,11 @@ public class MoviePersonsRepository : IMoviePersonsRepository
                          @FirstName, @LastName, 
                          @BirthDate, @CountryId) select @@IDENTITY";
 
-        int moviePersonId = connection.QuerySingle<int>(sqlQuery, new
+        item.Id = connection.QuerySingle<int>(sqlQuery, new
         {
             item.FirstName, item.LastName,
             item.BirthDate, CountryId = item.Country.Id
         });
-        item.Id = moviePersonId;
     }
 
     public void Update(MoviePerson item)
@@ -80,7 +76,7 @@ public class MoviePersonsRepository : IMoviePersonsRepository
     public void Delete(int id)
     {
         using var connection = new SqlConnection(_connectionKey);
-        connection.Execute("delete from MoviePersons where Id = @id", new {id});
+        connection.Execute("delete from MoviePersons where Id = @id", new { id });
     }
 
     public IEnumerable<MoviePerson> GetActorsByMovieId(int movieId)
@@ -96,7 +92,7 @@ public class MoviePersonsRepository : IMoviePersonsRepository
             {
                 person.Country = country;
                 return person;
-            }, new {movieId});
+            }, new { movieId });
 
         return moviePersons;
     }
@@ -105,13 +101,13 @@ public class MoviePersonsRepository : IMoviePersonsRepository
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = "insert into MoviesActors values (@movieId, @moviePersonId)";
-        connection.Execute(sqlQuery, new {movieId, moviePersonId});
+        connection.Execute(sqlQuery, new { movieId, moviePersonId });
     }
 
     public void DeleteFromMoviesActors(int moviePersonId, int movieId)
     {
         using var connection = new SqlConnection(_connectionKey);
         var sqlQuery = "delete from MoviesActors where MovieId = @movieId and MoviePersonId = @moviePersonId";
-        connection.Execute(sqlQuery, new {movieId, moviePersonId});
+        connection.Execute(sqlQuery, new { movieId, moviePersonId });
     }
 }
