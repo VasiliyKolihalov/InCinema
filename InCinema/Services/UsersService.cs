@@ -29,7 +29,7 @@ public class UsersService
         User user = _applicationContext.Users.GetById(userId);
         IEnumerable<Role> roles = _applicationContext.Roles.GetByUserId(userId);
 
-        UserView userView = _mapper.Map<UserView>(user);
+        var userView = _mapper.Map<UserView>(user);
         userView.Roles = _mapper.Map<IEnumerable<RoleView>>(roles);
 
         return userView;
@@ -43,7 +43,7 @@ public class UsersService
         if (roles.All(x => x.Name != RoleNames.UsersAdministrator) && userUpdateModel.Id != userId)
             throw new ForbiddenException("User does not have enough rights for this action");
 
-        User updateUser = _mapper.Map<User>(userUpdateModel);
+        var updateUser = _mapper.Map<User>(userUpdateModel);
         _applicationContext.Users.Update(updateUser);
 
         return _mapper.Map<UserPreview>(updateUser);

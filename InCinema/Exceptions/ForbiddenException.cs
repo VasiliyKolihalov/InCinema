@@ -1,6 +1,8 @@
-﻿namespace InCinema.Exceptions;
+﻿using System.Net;
 
-public class ForbiddenException : Exception
+namespace InCinema.Exceptions;
+
+public class ForbiddenException : HttpException
 {
-    public ForbiddenException(string? message = null) : base(message) { }
+    public ForbiddenException(string? message = null) : base(message, HttpStatusCode.Forbidden) { }
 }

@@ -35,7 +35,7 @@ public class AccountService
         if (user != null)
             throw new BadRequestException("User with this email already exist");
 
-        User newUser = _mapper.Map<User>(userCreate);
+        var newUser = _mapper.Map<User>(userCreate);
         newUser.PasswordHash = BCryptNet.HashPassword(userCreate.Password);
         newUser.IsConfirmEmail = false;
 
@@ -112,7 +112,7 @@ public class AccountService
     {
         User user = _applicationContext.Users.GetById(userId);
 
-        var htmlString = File.ReadAllText("HtmlTemplates/EmailConfirm.html");
+        string htmlString = File.ReadAllText("HtmlTemplates/EmailConfirm.html");
         Template template = Template.Parse(htmlString);
         string message = template.Render(new { callback_url = callbackUrl });
 

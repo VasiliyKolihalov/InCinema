@@ -120,4 +120,19 @@ public class MoviesRepository : IMoviesRepository
         var scoreQuery = @"select avg(cast(MovieScore as float)) from Reviews where MovieId = @movieId";
         return connection.QuerySingleOrDefault<double?>(scoreQuery, new { movieId });
     }
+
+    public IEnumerable<Movie> GetByMovieListId(int movieListId)
+    {
+        using var connection = new SqlConnection(_connectionKey);
+        var sqlQuery = @"select * from Movies
+                         inner join Countries on Movies.CountryId = Countries.Id
+                         inner join MovieListsMovies on Movies.Id = MovieListsMovies.MovieId
+                         where MovieListsMovies.MovieListId = @movieListId";
+
+        return connection.Query<Movie, Country, Movie>(sqlQuery, (movie, country) =>
+        {
+            movie.Country = country;
+            return movie;
+        }, new { movieListId });
+    }
 }

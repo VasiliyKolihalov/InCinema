@@ -49,7 +49,7 @@ public class ReviewsService
         _ = _applicationContext.Reviews.GetUserReview(reviewCreate.MovieId, userId)
             ?? throw new BadRequestException("Review already exist");
 
-        Review newReview = _mapper.Map<Review>(reviewCreate);
+        var newReview = _mapper.Map<Review>(reviewCreate);
         newReview.DateTime = DateTime.Now;
         newReview.Author = _applicationContext.Users.GetById(userId);
 
@@ -66,10 +66,10 @@ public class ReviewsService
         if (roles.All(x => x.Name != RoleNames.UsersAdministrator) && review.Author.Id != userId)
             throw new ForbiddenException("User does not have enough rights for this action");
 
-        Review updateReview = _mapper.Map<Review>(reviewUpdate);
+        var updateReview = _mapper.Map<Review>(reviewUpdate);
         _applicationContext.Reviews.Update(updateReview);
 
-        ReviewView reviewView = _mapper.Map<ReviewView>(updateReview);
+        var reviewView = _mapper.Map<ReviewView>(updateReview);
         reviewView.MovieId = review.MovieId;
         reviewView.Author = _mapper.Map<UserPreview>(review.Author);
         return reviewView;

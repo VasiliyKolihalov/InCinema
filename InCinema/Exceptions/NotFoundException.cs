@@ -1,6 +1,8 @@
-﻿namespace InCinema.Exceptions;
+﻿using System.Net;
 
-public class NotFoundException : Exception
+namespace InCinema.Exceptions;
+
+public class NotFoundException : HttpException
 {
-    public NotFoundException(string? message = null) : base(message) { }
+    public NotFoundException(string? message = null) : base(message, HttpStatusCode.NotFound) { }
 }

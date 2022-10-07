@@ -48,7 +48,8 @@ builder.Services
     .AddTransient<RolesService>()
     .AddTransient<IConfirmCodeGenerator, ConfirmCodeGenerator>()
     .AddTransient<IEmailService, EmailService>()
-    .AddTransient<ReviewsService>();
+    .AddTransient<ReviewsService>()
+    .AddTransient<MovieListsService>();
 
 #endregion
 

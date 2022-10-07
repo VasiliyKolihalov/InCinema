@@ -1,5 +1,4 @@
-﻿using InCinema.Models;
-using InCinema.Models.Configurations;
+﻿using InCinema.Models.Configurations;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
 using MimeKit;

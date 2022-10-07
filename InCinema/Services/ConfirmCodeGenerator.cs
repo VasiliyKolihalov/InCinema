@@ -1,5 +1,4 @@
-﻿using InCinema.Models.Countries;
-
+﻿
 namespace InCinema.Services;
 
 public class ConfirmCodeGenerator : IConfirmCodeGenerator
@@ -10,7 +9,7 @@ public class ConfirmCodeGenerator : IConfirmCodeGenerator
     public string GenerateEmailConfirmCode()
     {
         var random = new Random();
-        string code = random.Next(MinCode, MaxCode).ToString();
+        var code = random.Next(MinCode, MaxCode).ToString();
         return code;
     }
 }

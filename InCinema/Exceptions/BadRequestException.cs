@@ -1,6 +1,8 @@
-﻿namespace InCinema.Exceptions;
+﻿using System.Net;
 
-public class BadRequestException : Exception
+namespace InCinema.Exceptions;
+
+public class BadRequestException : HttpException
 {
-    public BadRequestException(string? message = null) : base(message) { }
+    public BadRequestException(string? message = null) : base(message, HttpStatusCode.BadRequest) { }
 }
