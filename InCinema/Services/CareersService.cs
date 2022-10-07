@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using InCinema.Exceptions;
 using InCinema.Models.Careers;
-using InCinema.Models.Genres;
 using InCinema.Repositories;
 
 namespace InCinema.Services;
@@ -35,7 +34,7 @@ public class CareersService
         if(career != null)
             throw new BadRequestException("Career with this name already exist");
 
-        Career newCareer = _mapper.Map<Career>(careerCreate);
+        var newCareer = _mapper.Map<Career>(careerCreate);
         
         _applicationContext.Careers.Add(newCareer);
         
@@ -50,7 +49,7 @@ public class CareersService
         if(career != null && career.Id != careerUpdate.Id)
             throw new BadRequestException("Career with this name already exist");
 
-        Career updateCareer = _mapper.Map<Career>(careerUpdate);
+        var updateCareer = _mapper.Map<Career>(careerUpdate);
         
         _applicationContext.Careers.Update(updateCareer);
 

@@ -26,9 +26,7 @@ public class ErrorHandlerMiddleware
 
             response.StatusCode = error switch
             {
-                NotFoundException => (int) HttpStatusCode.NotFound,
-                BadRequestException => (int) HttpStatusCode.BadRequest,
-                ForbiddenException => (int) HttpStatusCode.Forbidden,
+                HttpException exception => (int) exception.HttpStatusCode,
                 _ => (int) HttpStatusCode.InternalServerError
             };
 

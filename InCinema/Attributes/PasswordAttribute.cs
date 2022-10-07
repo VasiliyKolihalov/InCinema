@@ -9,7 +9,7 @@ public class PasswordAttribute : ValidationAttribute
         if (value is not string password)
             throw new ValidationException("PasswordAttribute meant for strings");
 
-        bool isValid = true;
+        var isValid = true;
         
         if (password.Length < 8 || password.Length > 16)
         {

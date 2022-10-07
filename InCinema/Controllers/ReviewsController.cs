@@ -23,8 +23,7 @@ public class ReviewsController : ControllerBase
         return Ok(_reviewsService.GetAll());
     }
 
-    [Route("getByUserId/{userId}")]
-    [HttpGet]
+    [HttpGet("getByUser/{userId}")]
     public ActionResult<IEnumerable<ReviewView>> GetByUserId(int userId)
     {
         return Ok(_reviewsService.GetByUserId(userId));

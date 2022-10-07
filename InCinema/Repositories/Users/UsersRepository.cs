@@ -1,8 +1,6 @@
-﻿using System.Data;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using Dapper;
 using InCinema.Exceptions;
-using InCinema.Models.Countries;
 using InCinema.Models.Users;
 
 namespace InCinema.Repositories.Users;

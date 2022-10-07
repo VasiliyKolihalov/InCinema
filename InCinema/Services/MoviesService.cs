@@ -28,7 +28,7 @@ public class MoviesService
     {
         IEnumerable<Movie> movies = _applicationContext.Movies.GetAll();
         var moviePreviews = _mapper.Map<IEnumerable<MoviePreview>>(movies);
-        foreach (var moviePreview in moviePreviews)
+        foreach (MoviePreview moviePreview in moviePreviews)
         {
             moviePreview.Score = GetMovieScoreFromCache(moviePreview.Id);
         }
@@ -169,15 +169,12 @@ public class MoviesService
 
     private double? GetMovieScoreFromCache(int movieId)
     {
-        if (!_cache.TryGetValue(movieId, out double? score))
+        if (_cache.TryGetValue(movieId, out double? score)) return score;
+        score = _applicationContext.Movies.GetScore(movieId);
+        _cache.Set(movieId, score, new MemoryCacheEntryOptions
         {
-            score = _applicationContext.Movies.GetScore(movieId);
-            _cache.Set(movieId, score, new MemoryCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = CacheStorageTime.MovieScore
-            });
-        }
-
+            AbsoluteExpirationRelativeToNow = CacheStorageTime.MovieScore
+        });
         return score;
     }
 }
